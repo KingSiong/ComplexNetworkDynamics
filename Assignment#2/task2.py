@@ -16,14 +16,24 @@ degree_size = 20
 
 x = np.arange(degree_size)
 
+def f(k, K):
+    return int(np.minimum(k - K / 2, K / 2))
+    # return int(np.maximum(k - K, K / 2))
+
+def C(n, m):
+    if n < 0 or m < 0 or n < m:
+        return 0
+    else:
+        return math.factorial(n) / math.factorial(n - m) / math.factorial(m)
+
 def calc_p(k, K, p):
     res = 0
-    up = int(np.minimum(k - K / 2, K / 2))
+    up = f(k, K)
     for i in range(up + 1):
-        res = res + math.factorial(K / 2) / math.factorial(i) / math.factorial(K / 2 - i) \
-            * pow(1 - p, i) * pow(p, K / 2 - i) \
-            * pow(p * K / 2, k - K / 2 - i) * exp(-p * K / 2) \
-            / math.factorial(k - K / 2 - i)
+        res = res + C(K / 2, i)\
+            * pow(1 - p, i) * pow(p, np.maximum(K / 2 - i, 0)) \
+            * pow(p * K / 2, np.maximum(k - K / 2 - i, 0)) * exp(-p * K / 2) \
+            / math.factorial(np.maximum(k - K / 2 - i, 0))
     return res
 
 plt.figure(figsize=(7, 4))
